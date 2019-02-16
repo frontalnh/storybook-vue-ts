@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["/*"],
+      "@stories/*": ["src/stories/*"]
+      // "@pages/*": ["pages/*"],
+      // "@layouts/*": ["layouts/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.vue"]
+}
