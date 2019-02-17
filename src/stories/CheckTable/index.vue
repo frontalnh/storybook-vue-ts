@@ -49,7 +49,7 @@
       <template>
         <div class="text-xs-center">
           <v-pagination
-            v-model="pagination.page"
+            v-model="page"
             :length="Math.ceil(pagination.totalItems/10)"
             :total-visible="10"
             @input="setPage"
@@ -80,18 +80,17 @@ class Pagination {
     properties: [],
     itemKey: String,
     pagination: Pagination,
-    sortFunc: Function,
-    setPage: Function
+    sortFunc: Function
   }
 })
 export default class extends Vue {
   selectedItems = [];
+  page = 1;
   @Prop() items: Array<any>;
   @Prop() headers: Array<any>;
   @Prop() properties: Array<any>;
   @Prop() itemKey: String;
   @Prop() pagination: Pagination;
-  @Prop() setPage: Function;
 
   selectAll(props) {
     if (this.selectedItems.length) {
@@ -102,8 +101,17 @@ export default class extends Vue {
     this.$emit("onSelectAll", this.selectedItems);
   }
 
+  setPage(page: number) {
+    this.$emit(
+      "onPaginationChange",
+      Object.assign(this.pagination, { page }),
+      this.pagination
+    );
+  }
+
   @Watch("pagination")
   onPaginationChange(newVal: Pagination, oldVal: Pagination) {
+    this.page = newVal.page;
     this.$emit("onPaginationChange", newVal, oldVal);
   }
 
