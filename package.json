@@ -9,14 +9,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@storybook/addon-actions": "^4.1.11",
+    "@storybook/addons": "^4.1.11",
+    "material-design-icons-iconfont": "^4.0.4",
     "node-sass": "^4.11.0",
     "nuxt-property-decorator": "^2.0.1",
     "sass-loader": "^7.1.0",
     "ts-loader": "^5.3.3",
-    "vue-loader": "^15.6.2"
+    "vue-loader": "^15.6.2",
+    "vuetify": "^1.5.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.3.3",
     "@storybook/addon-info": "^4.1.11",
+    "@storybook/addon-knobs": "^4.1.11",
+    "@storybook/addon-links": "^4.1.11",
+    "@storybook/addon-notes": "^4.1.11",
     "@storybook/vue": "^4.1.11",
     "@types/jest": "^24.0.5",
     "@types/storybook__react": "^4.0.1",
