@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/vue';
-import CheckTable from './index.vue';
+import CheckTable from './CheckTable.vue';
 
 import { action } from '@storybook/addon-actions';
 import { withKnobs, number, text, boolean, object, array } from '@storybook/addon-knobs';
@@ -39,13 +39,7 @@ let items = [
   { id: 9, name: 'hello1', selected: true },
   { id: 10, name: 'hello1', selected: true }
 ];
-let pagination = {
-  descending: true,
-  page: 1,
-  rowsPerPage: 10, // -1 for All
-  sortBy: 'id',
-  totalItems: 60
-};
+
 let selectedItems = [];
 
 storiesOf('CheckTable', module)
@@ -60,7 +54,8 @@ storiesOf('CheckTable', module)
           headers: [{ text: 'Id', value: 'id' }, { text: 'Name', value: 'name' }],
           items,
           properties: ['id', 'name'],
-          itemKey: 'id'
+          itemKey: 'id',
+          totalCount: 70
         };
       },
       methods: {
@@ -80,14 +75,10 @@ storiesOf('CheckTable', module)
           action('onSelectAll')(items);
         },
         onPaginationChange: function(newPagination, oldPagination) {
-          action('onPaginationChange')(pagination);
           if (newPagination.page != oldPagination) {
-            this.items = datas.slice((pagination.page - 1) * 10, pagination.page * 10);
+            this.items = datas.slice((newPagination.page - 1) * 10, newPagination.page * 10);
           }
         }
-      },
-      props: {
-        pagination: { default: object('pagination', pagination) }
       },
       template: `
       <CheckTable 
@@ -95,8 +86,9 @@ storiesOf('CheckTable', module)
     :headers= "headers" 
     :items= "items" 
     :properties= "properties"
-    :pagination="pagination"
-    :itemKey="itemKey" 
+    :itemKey="itemKey"
+    :totalCount="totalCount"
+    :page="1"
     @onSelect = "onSelect"
     @onSelectAll = "onSelectAll"
     @onPaginationChange = "onPaginationChange" />
@@ -106,7 +98,6 @@ storiesOf('CheckTable', module)
       notes: `
       @onSelect: 하나의 아이템이 선택되었을때 호출되며 선택된 item  들이 인자로 넘어온다.
       @onSelectAll: 모들 아이템이 선택되었을때 발생하는 이벤트로 선택된 모든 객에들이 넘어온다..
-      @onPageChange: page 가 변경되었을때 이벤트가 날아오며 페이지가 인자로 넘어온다.
       `
     }
   );

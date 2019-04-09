@@ -11,7 +11,7 @@
       :item-key="itemKey"
       class="elevation-1"
     >
-      <template v-slot:headers="props">
+      <template slot="headers" slot-scope="props">
         <tr>
           <th>
             <v-checkbox
@@ -32,7 +32,7 @@
           </th>
         </tr>
       </template>
-      <template v-slot:items="item">
+      <template slot="items" slot-scope="item">
         <tr :active="item.selected" @click="select(item)">
           <td>
             <v-checkbox :input-value="item.selected" primary hide-details></v-checkbox>
@@ -45,11 +45,11 @@
         </tr>
       </template>
     </v-data-table>
-    <div>
+    <div class="pagination-row">
       <template>
         <div class="text-xs-center">
           <v-pagination
-            v-model="page"
+            v-model="pagination.page"
             :length="Math.ceil(pagination.totalItems/10)"
             :total-visible="10"
             @input="setPage"
@@ -73,24 +73,29 @@ class Pagination {
   totalItems: number;
 }
 
-@Component({
-  props: {
-    items: [],
-    headers: [],
-    properties: [],
-    itemKey: String,
-    pagination: Pagination,
-    sortFunc: Function
-  }
-})
+@Component({})
 export default class extends Vue {
-  selectedItems = [];
-  page = 1;
+  selectedItems = <any>[];
   @Prop() items: Array<any>;
   @Prop() headers: Array<any>;
   @Prop() properties: Array<any>;
   @Prop() itemKey: String;
-  @Prop() pagination: Pagination;
+  @Prop() totalCount: number;
+  @Prop() page: number;
+
+  pagination: Pagination = {
+    descending: true,
+    page: 1,
+    rowsPerPage: 10, // -1 for All
+    sortBy: "id",
+    totalItems: 60
+  };
+
+  @Watch("totalCount")
+  updateTotalCount(totalCount) {
+    console.log("totalCount");
+    this.pagination.totalItems = totalCount;
+  }
 
   selectAll(props) {
     if (this.selectedItems.length) {
@@ -101,18 +106,13 @@ export default class extends Vue {
     this.$emit("onSelectAll", this.selectedItems);
   }
 
+  @Watch("page")
   setPage(page: number) {
     this.$emit(
       "onPaginationChange",
       Object.assign(this.pagination, { page }),
       this.pagination
     );
-  }
-
-  @Watch("pagination")
-  onPaginationChange(newVal: Pagination, oldVal: Pagination) {
-    this.page = newVal.page;
-    this.$emit("onPaginationChange", newVal, oldVal);
   }
 
   select(item) {
@@ -122,8 +122,13 @@ export default class extends Vue {
 }
 </script>
 <style lang="scss">
-.v-pagination__item--active {
-  color: green !important;
+#checktable-component-wrapper {
+  .v-pagination__item--active {
+    color: white !important;
+  }
+  .pagination-row {
+    margin-top: 16px;
+  }
 }
 </style>
 
